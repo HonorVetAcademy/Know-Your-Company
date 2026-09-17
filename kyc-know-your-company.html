@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYC — Know Your Company | HonorVet Technologies</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap');
+
+:root{
+  color-scheme: light;
+  --red:#EE1A0F;
+  --yellow:#FDDB26;
+  --orange:#FF9000;
+  --gold:#C59B3D;
+  --gray:#808286;
+  --lgray:#D9E0E0;
+  --charcoal:#231F20;
+  --cream:#FAF9F6;
+  --white:#FFFFFF;
+  --sidebar-w:270px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Poppins',-apple-system,sans-serif;
+  background:var(--cream);
+  color:var(--charcoal);
+  display:flex;
+  min-height:100vh;
+  line-height:1.6;
+}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif; margin:0 0 .5em 0; color:var(--charcoal); font-weight:700;}
+p{margin:0 0 1em 0;}
+a{color:var(--red);}
+button{font-family:inherit; cursor:pointer;}
+
+/* ---------- Sidebar ---------- */
+#sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:var(--white);
+  color:var(--charcoal);
+  padding:32px 22px;
+  position:fixed;
+  top:0; left:0; bottom:0;
+  overflow-y:auto;
+  z-index:10;
+  border-right:1px solid var(--lgray);
+  box-shadow:2px 0 24px rgba(35,31,32,.04);
+}
+.brand{margin-bottom:8px;}
+.brand-logo{width:100%; max-width:206px; height:auto; display:block;}
+.module-title{
+  font-size:11px; letter-spacing:1.8px; text-transform:uppercase; color:var(--red);
+  margin:26px 0 16px 0; font-weight:700;
+  padding-bottom:14px; border-bottom:1px solid var(--lgray);
+}
+
+.progress-wrap{margin-bottom:26px;}
+.progress-track{background:var(--lgray); border-radius:20px; height:7px; overflow:hidden;}
+.progress-fill{background:linear-gradient(90deg, var(--orange), var(--red)); height:100%; width:0%; transition:width .4s ease;}
+.progress-label{font-size:11px; color:var(--gray); margin-top:7px; font-weight:500;}
+
+nav{display:flex; flex-direction:column; gap:2px;}
+.nav-item{
+  display:flex; align-items:center; gap:11px;
+  padding:11px 12px; border-radius:8px;
+  background:none; border:none; border-left:3px solid transparent; color:#5c5856;
+  text-align:left; font-size:13.5px; font-weight:500;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.nav-item:hover{background:#fbf6f0; color:var(--charcoal);}
+.nav-item.active{background:#fff2f0; color:var(--red); border-left-color:var(--red); font-weight:600;}
+.nav-check{
+  width:18px; height:18px; border-radius:50%; flex-shrink:0;
+  border:1.5px solid var(--lgray);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:transparent;
+}
+.nav-item.done .nav-check{background:var(--red); border-color:var(--red); color:var(--white); font-weight:700;}
+.nav-item.done .nav-check::after{content:'✓';}
+.nav-num{font-size:10px; opacity:.6; width:14px;}
+
+/* ---------- Main ---------- */
+#main{
+  margin-left:var(--sidebar-w);
+  flex:1;
+  padding:52px 60px 90px 60px;
+  max-width:1000px;
+}
+.page{display:none; animation:fadeIn .35s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.eyebrow{color:var(--red); font-weight:600; font-size:13px; letter-spacing:.5px; margin-bottom:10px;}
+h1.page-title{font-size:36px; max-width:760px;}
+.lede{font-size:17px; color:#4a4644; max-width:700px; margin-bottom:34px;}
+.content-block{max-width:720px;}
+.content-block h2{font-size:24px; margin-top:44px;}
+.content-block h3{font-size:18px; margin-top:28px; color:var(--red);}
+.content-block p, .content-block li{font-size:15.5px; color:#332f2e;}
+
+.card{
+  background:var(--white); border:1px solid var(--lgray); border-radius:12px;
+  padding:22px 24px; margin:18px 0;
+  box-shadow:0 3px 18px rgba(35,31,32,.05);
+}
+.callout{
+  border-left:4px solid var(--red);
+  background:#fff4f3;
+  padding:16px 20px; border-radius:0 8px 8px 0; margin:20px 0;
+  font-size:14.5px;
+}
+.callout strong{color:var(--red);}
+.callout.gold{border-left-color:var(--orange); background:#fff8ec;}
+.callout.gold strong{color:var(--orange);}
+.callout.danger{border-left-width:5px; background:#fff0ef; box-shadow:0 3px 14px rgba(238,26,15,.07);}
+
+.mini-title{
+  margin:0 0 10px 0; font-family:'Poppins',sans-serif; font-size:12px; letter-spacing:1px;
+  color:var(--red); text-transform:uppercase; font-weight:700;
+}
+
+.formula-box{
+  background:#fffaf0; border-left:4px solid var(--orange); border-radius:0 10px 10px 0;
+  padding:20px 24px; margin:20px 0; box-shadow:0 3px 16px rgba(255,144,0,.06);
+}
+.formula-box p{font-family:'Poppins',sans-serif; font-size:15.5px; font-weight:600; color:var(--charcoal); margin:0 0 12px 0; letter-spacing:.2px;}
+.formula-box p:last-child{margin-bottom:0;}
+.formula-box b{color:var(--red);}
+
+td.neg{background:#fff0ef; color:var(--red); font-weight:700;}
+
+table{width:100%; border-collapse:collapse; margin:18px 0; font-size:14.5px;}
+th{background:var(--charcoal); color:var(--white); text-align:left; padding:10px 14px; font-weight:600;}
+td{padding:10px 14px; border-bottom:1px solid var(--lgray); transition:background .15s ease;}
+tr:nth-child(even) td{background:#fbfaf8;}
+tr:hover td:not(.neg){background:#f5f0e8;}
+
+.flow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:22px 0;}
+.flow-step{
+  background:var(--white); border:1.5px solid var(--charcoal); border-radius:8px;
+  padding:9px 14px; font-size:13.5px; font-weight:600;
+}
+.flow-arrow{color:var(--red); font-size:18px;}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0;}
+.grid-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:20px 0;}
+@media(max-width:820px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* Flip cards */
+.flip-card{background:transparent; perspective:1000px; height:170px;}
+.flip-inner{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; cursor:pointer;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:12px; padding:18px; display:flex; flex-direction:column; justify-content:center;}
+.flip-front{background:var(--charcoal); color:var(--white);}
+.flip-front .ftag{font-size:11px; color:var(--yellow); letter-spacing:1px; margin-bottom:6px;}
+.flip-front .fname{font-family:'Playfair Display',serif; font-size:19px; font-weight:700;}
+.flip-front .fhint{font-size:11.5px; color:var(--lgray); margin-top:10px;}
+.flip-back{background:var(--white); border:1.5px solid var(--red); transform:rotateY(180deg); overflow-y:auto;}
+.flip-back p{font-size:13px; margin:0;}
+
+.activity-box{background:var(--white); border:1.5px dashed var(--gray); border-radius:14px; padding:26px 28px; margin:26px 0; box-shadow:0 3px 18px rgba(35,31,32,.04);}
+.activity-label{display:inline-block; background:var(--charcoal); color:var(--yellow); font-size:11px; font-weight:700; letter-spacing:1px; padding:4px 10px; border-radius:5px; text-transform:uppercase; margin-bottom:14px;}
+
+.seq-pool{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0;}
+.seq-chip{
+  background:var(--white); border:1.5px solid var(--charcoal); border-radius:20px;
+  padding:8px 16px; font-size:13.5px; font-weight:500; transition:all .15s; color:var(--charcoal);
+}
+.seq-chip:hover{background:var(--charcoal); color:var(--white);}
+.seq-chip.correct{background:#e4f5e6; border-color:#3a9d4a; color:#256b31; pointer-events:none;}
+.seq-chip.wrong{animation:shake .3s;}
+@keyframes shake{25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+.seq-built{display:flex; flex-wrap:wrap; gap:6px; margin:16px 0; min-height:36px; align-items:center;}
+.seq-built .b{background:#e4f5e6; border:1px solid #3a9d4a; color:#256b31; border-radius:20px; padding:6px 13px; font-size:12.5px; font-weight:600;}
+.seq-msg{font-size:13.5px; font-weight:600; margin-top:10px;}
+.seq-msg.win{color:#256b31;}
+
+.classify-row{display:flex; flex-wrap:wrap; gap:10px; margin:16px 0;}
+.classify-chip{background:var(--white); border:1.5px solid var(--gray); border-radius:8px; padding:10px 16px; font-size:13.5px; box-shadow:0 2px 10px rgba(35,31,32,.04);}
+.classify-chip .btns{display:flex; gap:6px; margin-top:8px;}
+.classify-chip button{font-size:11.5px; padding:4px 10px; border-radius:5px; border:1px solid var(--charcoal); background:var(--white); color:var(--charcoal);}
+.classify-chip button:hover{background:var(--lgray);}
+.classify-chip.answered.right{border-color:#3a9d4a; background:#f2fbf3;}
+.classify-chip.answered.wrong{border-color:var(--red); background:#fff4f3;}
+.classify-result{font-size:11.5px; font-weight:600; margin-top:6px; display:none;}
+.classify-chip.answered .classify-result{display:block;}
+
+.scenario-card{border:1.5px solid var(--lgray); border-radius:10px; padding:18px 20px; margin:14px 0; background:#fdfcfa; box-shadow:0 2px 12px rgba(35,31,32,.04);}
+.scenario-card .stxt{font-size:14px; font-style:italic; margin-bottom:12px;}
+.scenario-btns{display:flex; gap:8px; flex-wrap:wrap;}
+.scenario-btns button{background:var(--white); border:1.5px solid var(--charcoal); border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600; color:var(--charcoal);}
+.scenario-btns button:hover{background:var(--charcoal); color:var(--white);}
+.scenario-feedback{margin-top:10px; font-size:13px; font-weight:600; display:none;}
+.scenario-feedback.right{color:#256b31;}
+.scenario-feedback.wrong{color:var(--red);}
+
+.fee-row{display:flex; gap:14px; flex-wrap:wrap; margin:16px 0;}
+.fee-card{background:var(--white); border:1.5px solid var(--charcoal); border-radius:10px; padding:16px 20px; width:180px; text-align:center; cursor:pointer; box-shadow:0 2px 12px rgba(35,31,32,.04); transition:transform .12s ease, box-shadow .12s ease;}
+.fee-card:hover{transform:translateY(-2px); box-shadow:0 4px 16px rgba(35,31,32,.08);}
+.fee-card .flabel{font-weight:600; font-size:14px;}
+.fee-card .fval{font-family:'Playfair Display',serif; font-size:22px; color:var(--red); font-weight:700; margin-top:8px; display:none;}
+.fee-card.revealed .fval{display:block;}
+
+/* Nav buttons at bottom of each page */
+.page-nav{display:flex; justify-content:space-between; margin-top:48px; padding-top:24px; border-top:1px solid var(--lgray); max-width:720px;}
+.pbtn{background:var(--red); color:var(--white); border:none; border-radius:8px; padding:12px 22px; font-size:14px; font-weight:600; box-shadow:0 3px 10px rgba(238,26,15,.25); transition:transform .12s ease, box-shadow .12s ease;}
+.pbtn:hover{background:#c91008; transform:translateY(-1px); box-shadow:0 5px 14px rgba(238,26,15,.32);}
+.pbtn.secondary{background:none; color:var(--charcoal); border:1.5px solid var(--gray);}
+.pbtn.secondary:hover{background:var(--lgray);}
+
+/* Quiz */
+.quiz-q{background:var(--white); border:1px solid var(--lgray); border-radius:12px; padding:22px 24px; margin:18px 0; box-shadow:0 3px 16px rgba(35,31,32,.04);}
+.quiz-q .qnum{font-size:11.5px; color:var(--gray); font-weight:600; letter-spacing:.5px; margin-bottom:6px;}
+.quiz-q .qtext{font-size:15.5px; font-weight:600; margin-bottom:14px;}
+.qopt{display:block; width:100%; text-align:left; background:#fdfcfa; border:1.5px solid var(--lgray); border-radius:8px; padding:11px 15px; margin-bottom:8px; font-size:14px; color:var(--charcoal);}
+.qopt:hover{border-color:var(--charcoal);}
+.qopt.selected{border-color:var(--red); background:#fff4f3;}
+.qopt.correct{border-color:#3a9d4a; background:#f2fbf3;}
+.qopt.incorrect{border-color:var(--red); background:#fff0ef;}
+.qopt:disabled{cursor:default;}
+
+#quiz-result{display:none; text-align:center; margin:40px 0;}
+#quiz-result .score-num{font-family:'Playfair Display',serif; font-size:56px; color:var(--red); font-weight:700;}
+.badge-row{display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap;}
+.badge{background:var(--charcoal); color:var(--yellow); padding:7px 16px; border-radius:20px; font-size:12.5px; font-weight:700; letter-spacing:.5px;}
+
+/* Certificate */
+#cert-gate{max-width:600px;}
+#cert-wrap{display:none;}
+.cert{
+  background:var(--white); border-radius:4px; max-width:780px; margin:20px auto;
+  padding:0; position:relative; overflow:hidden;
+  box-shadow:0 14px 44px rgba(35,31,32,.16);
+  border-left:8px solid var(--red);
+  border-right:8px solid var(--gold);
+}
+.cert-topstrip{height:14px; background:linear-gradient(90deg, var(--yellow), var(--gold), var(--orange), var(--gold), var(--yellow));}
+.cert-inner{padding:48px 60px 44px 60px; text-align:center;}
+.cert-logo{height:64px; width:auto; margin:0 auto 16px auto; display:block;}
+.cert-sdvosb{font-size:10.5px; letter-spacing:2.5px; color:var(--gray); margin:18px 0 4px 0; text-transform:uppercase;}
+.cert-heading{font-size:13px; letter-spacing:3px; color:var(--red); font-weight:700; text-transform:uppercase; margin-bottom:26px; position:relative; display:inline-block; padding-bottom:14px;}
+.cert-heading::after{content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:56px; height:2px; background:var(--gold);}
+.cert-presented{font-size:13px; color:var(--gray); margin-bottom:8px;}
+.cert-name{font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:40px; color:var(--red); border-bottom:2px solid var(--gold); display:inline-block; padding-bottom:8px; margin-bottom:22px; min-width:320px;}
+.cert-desc{font-size:14px; color:#4a4644; max-width:480px; margin:0 auto 22px auto;}
+.cert-desc b{color:var(--charcoal);}
+.cert-pills{display:flex; justify-content:center; gap:10px; margin-bottom:30px; flex-wrap:wrap;}
+.cert-pill{background:#ffe9d6; color:#b85c00; padding:7px 16px; border-radius:16px; font-size:12px; font-weight:700; border:1px solid #f0cfa0;}
+.cert-sign-row{display:flex; justify-content:space-between; align-items:flex-end; margin-top:34px; max-width:560px; margin-left:auto; margin-right:auto; text-align:left; padding-top:22px; border-top:1px solid var(--lgray);}
+.cert-date{font-size:12px; color:var(--gray);}
+.cert-sig{text-align:right;}
+.cert-sig .sname{font-family:'Playfair Display',serif; font-style:italic; font-weight:700; font-size:23px; color:var(--charcoal);}
+.cert-sig .stitle{font-size:10px; letter-spacing:1.5px; color:var(--red); font-weight:700; margin-top:3px;}
+.cert-sig .surl{font-size:10.5px; color:var(--gray); margin-top:2px;}
+.name-input{font-size:16px; padding:12px 16px; border:1.5px solid var(--gray); border-radius:8px; width:320px; max-width:100%; font-family:'Poppins',sans-serif;}
+
+@media print{
+  #sidebar,.page-nav,.no-print{display:none !important;}
+  #main{margin-left:0;}
+  body{background:white;}
+}
+
+@media(max-width:900px){
+  #sidebar{position:relative; width:100%; height:auto;}
+  #main{margin-left:0; padding:32px 24px;}
+  body{flex-direction:column;}
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="brand"><img class="brand-logo" src="data:image/png;base64,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1qS/Egn8STgEQQxx+7fMaw72/u7w/wCkTvIP7pPH5dK7C38CyuQbq7RB3WNd36nFbVl4T0izIY2/nuP4pju/Tp+lethskrvVxUfUX9oYHD6wV35f5s8ystE1HVX22dq7rnBfGFH4niuy0f4d20BWbVJftDjnyUyEH1PU/pXbKqooVVCqOAAMAUte/h8rpUtZe8/w+44MTnmIqrlp+6vLf7/8hkMMVvEsUMaxxqMKiDAH4U+iivTPGbbd2FFFFAgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/Z" alt="HonorVet Technologies"></div>
+  <div class="module-title">KYC — Know Your Company</div>
+
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">0 of 7 sections complete</div>
+  </div>
+
+  <nav id="nav">
+    <button class="nav-item" data-page="welcome"><span class="nav-check"></span><span>Welcome</span></button>
+    <button class="nav-item" data-page="ch1"><span class="nav-check"></span><span>1 · Recruitment &amp; Staffing</span></button>
+    <button class="nav-item" data-page="ch2"><span class="nav-check"></span><span>2 · Our Clients</span></button>
+    <button class="nav-item" data-page="ch3"><span class="nav-check"></span><span>3 · The Staffing Ecosystem</span></button>
+    <button class="nav-item" data-page="ch4"><span class="nav-check"></span><span>4 · Team &amp; Winning Business</span></button>
+    <button class="nav-item" data-page="ch5"><span class="nav-check"></span><span>5 · Pay Rate, Bill Rate &amp; Tax</span></button>
+    <button class="nav-item" data-page="ch6"><span class="nav-check"></span><span>6 · Compliance &amp; Background Checks</span></button>
+    <button class="nav-item" data-page="quiz"><span class="nav-check"></span><span>Final Quiz</span></button>
+    <button class="nav-item" data-page="cert"><span class="nav-check"></span><span>Certificate</span></button>
+  </nav>
+</div>
+
+<div id="main">
+
+  <!-- WELCOME -->
+  <section class="page active" id="page-welcome">
+    <div class="eyebrow">Recruiter Onboarding · Module 1</div>
+    <h1 class="page-title">KYC — Know Your Company</h1>
+    <p class="lede">Before you can represent HonorVet to a candidate or a client, you need to know who HonorVet is, who we work with, and how the staffing business actually runs. Think of this module as following one requisition from the moment HonorVet wins the work to the moment a candidate gets paid — each chapter picks up exactly where the last one left off.</p>
+
+    <div class="content-block">
+      <div class="card">
+        <h3 style="margin-top:0;">Who is HonorVet Technologies?</h3>
+        <p>HonorVet Technologies is a technology-driven staffing company. We aim to give clients the reach of a large staffing organization, with the feel of a specialized, boutique provider — our broader purpose is to help lower underemployment.</p>
+        <p>Our legal registered name is <b>Technostaff LLC</b>, doing business as <b>HonorVet Technologies</b>. Our registered address is 271 Route 46 West, Suite C-202, Fairfield, NJ 07004.</p>
+      </div>
+
+      <div class="callout">
+        <strong>Certifications that define who we are:</strong> HonorVet is certified by the U.S. Small Business Administration (SBA) and the National Veteran Owned Business Association (NaVOBA), making us an <b>SDVOSB — Service-Disabled Veteran Owned Small Business</b>. That's a big part of how we win federal and government contracts. We're also <b>Joint Commission Certified (JCC)</b> — the quality and compliance mark that matters most in healthcare staffing — and <b>ISO 9001 / ISO 27001 certified</b>, covering quality management and information security. These three are what clients check for before trusting us with a contract.
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;">
+          <span class="cert-pill">SDVOSB</span>
+          <span class="cert-pill">JCC — Joint Commission Certified</span>
+          <span class="cert-pill">ISO 9001 / 27001 Certified</span>
+        </div>
+      </div>
+
+      <h3>Leadership you'll hear referenced</h3>
+      <p>Daniel Ginzburg, Rajeev Sharma, Ashish Mahajan, Ravi Bhambri, and Munish Gupta are key members of the organization — names you'll see on internal communications and org context.</p>
+
+      <h3>What's in this module</h3>
+      <table>
+        <tr><th>Chapter</th><th>Covers</th></tr>
+        <tr><td>1</td><td>What recruitment and staffing actually mean, how they differ, and HonorVet's lines of service</td></tr>
+        <tr><td>2</td><td>The four types of clients we work with — federal, state, local, and commercial — plus Fortune 500</td></tr>
+        <tr><td>3</td><td>The ecosystem around staffing: MSPs, VMS platforms, ATS, and overtime basics</td></tr>
+        <tr><td>4</td><td>HonorVet's own departments, team hierarchy, and how we win business (RFI/RFP/RFQ)</td></tr>
+        <tr><td>5</td><td>How pay rate, bill rate, and markup work, and the difference between W-2, 1099, and C2C</td></tr>
+        <tr><td>6</td><td>Compliance: work authorization, immunization records, background verification, and drug testing</td></tr>
+      </table>
+      <p>Each chapter has a short activity to check your understanding. At the end, a quiz unlocks your KYC certificate.</p>
+    </div>
+
+    <div class="page-nav">
+      <span></span>
+      <button class="pbtn" onclick="goTo('ch1')">Start Chapter 1 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 1 -->
+  <section class="page" id="page-ch1">
+    <div class="eyebrow">Chapter 1</div>
+    <h1 class="page-title">What is Recruitment? What is Staffing?</h1>
+    <p class="lede">These two words get used interchangeably outside the industry — inside it, they mean different things, and knowing the difference is the foundation of everything else you'll learn.</p>
+
+    <div class="content-block">
+      <h2>Recruitment</h2>
+      <p><b>Recruitment</b> is the process of finding, attracting, screening, interviewing, and selecting candidates for a job.</p>
+      <h3>The recruitment life cycle</h3>
+      <div class="flow">
+        <div class="flow-step">Requirement</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Job Description</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Sourcing</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Screening</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Interview</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Selection</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Offer</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Onboarding</div>
+      </div>
+
+      <h2>Staffing</h2>
+      <p><b>Staffing</b> is broader. It means determining the need for a role, recruiting the candidate, hiring them, onboarding them, and then managing workforce requirements over time — retaining and training the workforce as well.</p>
+
+      <div class="callout">
+        <strong>Key difference:</strong> Recruitment focuses on finding and hiring talent. Staffing focuses on maintaining and managing the workforce, including recruitment as one part of that.
+      </div>
+
+      <h2>HonorVet as a staffing agency — our lines of service</h2>
+      <p>Click each card to see how each service is defined.</p>
+
+      <div class="grid-3" id="los-cards"></div>
+
+      <div class="activity-box">
+        <span class="activity-label">Activity</span>
+        <h3 style="margin-top:0;">Build the recruitment life cycle</h3>
+        <p style="font-size:14px;">Click the steps below <b>in the correct order</b>, starting with the first step of the cycle.</p>
+        <div class="seq-pool" id="seq-pool"></div>
+        <div class="seq-built" id="seq-built"></div>
+        <div class="seq-msg" id="seq-msg"></div>
+        <button class="pbtn secondary" style="margin-top:10px; font-size:12.5px; padding:7px 14px;" onclick="resetSeq()">Reset</button>
+      </div>
+
+      <div class="callout gold">
+        Once you know what recruitment and staffing actually involve, the obvious next question is: staffing and recruiting for whom? That's Chapter 2.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('welcome')">← Back</button>
+      <button class="pbtn" onclick="goTo('ch2')">Continue to Chapter 2 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 2 -->
+  <section class="page" id="page-ch2">
+    <div class="eyebrow">Chapter 2</div>
+    <h1 class="page-title">Our Clients — Whom Are We Working With?</h1>
+    <p class="lede">Now that you know what staffing actually involves, here's who's on the other end of it. HonorVet places candidates across four broad categories of client, and each one has its own rhythm, its own procurement rules, and its own expectations of you as a recruiter.</p>
+
+    <div class="content-block">
+      <div class="grid-2" id="client-cards"></div>
+
+      <h2>Fortune 500 companies</h2>
+      <p>Fortune 500 companies are the 500 largest U.S. companies, ranked annually by revenue by <i>Fortune</i> magazine. You'll see names like Walmart, Amazon, Apple, UnitedHealth Group, Berkshire Hathaway, CVS Health, ExxonMobil, Alphabet (Google), Microsoft, and JPMorgan Chase come up regularly as commercial clients or end-clients in a program.</p>
+
+      <div class="activity-box">
+        <span class="activity-label">Activity</span>
+        <h3 style="margin-top:0;">Fortune 500 or not?</h3>
+        <p style="font-size:14px;">Sort each organization below. Fortune 500 companies are the 500 largest U.S. companies by revenue — a small, local, or regional business isn't on that list, no matter how well it's run.</p>
+        <div class="classify-row" id="classify-row"></div>
+      </div>
+
+      <div class="callout gold">
+        Knowing who our clients are only gets you halfway. The next question is how a requisition from one of these clients actually lands on a recruiter's desk — that's Chapter 3.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('ch1')">← Back</button>
+      <button class="pbtn" onclick="goTo('ch3')">Continue to Chapter 3 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 3 -->
+  <section class="page" id="page-ch3">
+    <div class="eyebrow">Chapter 3</div>
+    <h1 class="page-title">The Staffing Ecosystem</h1>
+    <p class="lede">You know who our clients are. Beyond HonorVet and the client, though, there's usually a layer of platforms and intermediaries in between — knowing these acronyms is how you understand where a requisition actually comes from.</p>
+
+    <div class="content-block">
+      <h2>Full-time hours &amp; overtime</h2>
+      <p>In the U.S., a full-time employee is generally expected to work 40 hours a week. If they work <b>more than 40 hours in a week</b>, that additional time is considered <b>overtime (OT)</b>, typically paid at <b>1.5x</b> the regular pay rate.</p>
+
+      <h2>MSP — Managed Service Provider</h2>
+      <p>An MSP is a third-party organization that manages a company's temporary, contract, and contingent workforce program — including staffing vendors, hiring processes, compliance, and workforce operations — on behalf of the client and the staffing agency/vendor.</p>
+      <p>Common MSPs you'll encounter: Randstad Sourceright, Allegis Global Solutions (AGS), Pontoon Solutions, Magnit, PeopleScout, KellyOCG, TAPFIN, CXC Global, Guidant Global, and Workspend.</p>
+
+      <div class="callout gold">
+        <strong>MSP fees are always a percentage,</strong> charged on top of the engagement. As a rough guide: IT roles run 1–5%, Healthcare roles run 1–10%, and Non-IT roles run 1–5%.
+      </div>
+      <div class="activity-box">
+        <span class="activity-label">Activity</span>
+        <h3 style="margin-top:0;">Guess the MSP fee range</h3>
+        <p style="font-size:14px;">Click each industry to reveal its typical MSP fee range.</p>
+        <div class="fee-row" id="fee-row"></div>
+      </div>
+
+      <h2>VMS — Vendor Management System</h2>
+      <p>A VMS is the software platform an MSP or client uses to manage requisitions, submittals, and timesheets across vendors — for example, Fieldglass, Beeline, and Magnit's own VMS product. This is usually where you'll actually submit a candidate once a req is posted through an MSP program.</p>
+
+      <h2>Other terms you'll hear constantly</h2>
+      <table>
+        <tr><th>Term</th><th>Stands for</th><th>What it means</th></tr>
+        <tr><td>MSA</td><td>Master Service Agreement</td><td>The overarching contract between HonorVet and a client or MSP that sets the terms of engagement</td></tr>
+        <tr><td>ATS</td><td>Applicant Tracking System</td><td>HonorVet's system of record is <b>JobDiva</b> — every requisition and submittal lives here</td></tr>
+        <tr><td>OT</td><td>Overtime</td><td>Hours worked beyond 40/week, typically at 1.5x pay</td></tr>
+      </table>
+
+      <div class="activity-box">
+        <span class="activity-label">Activity</span>
+        <h3 style="margin-top:0;">Match the acronym</h3>
+        <p style="font-size:14px;">Click each card to reveal what it stands for.</p>
+        <div class="grid-3" id="acro-cards"></div>
+      </div>
+
+      <div class="callout gold">
+        Once a req is sitting in a VMS or coming through an MSP, someone inside HonorVet still has to actually win it and staff it. That's the team you'll meet next.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('ch2')">← Back</button>
+      <button class="pbtn" onclick="goTo('ch4')">Continue to Chapter 4 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4 -->
+  <section class="page" id="page-ch4">
+    <div class="eyebrow">Chapter 4</div>
+    <h1 class="page-title">HonorVet's Team &amp; How We Win Business</h1>
+    <p class="lede">Now that you know who we serve and how work reaches us, here's who's actually inside HonorVet doing it — and how we win the contract in the first place.</p>
+
+    <div class="content-block">
+      <h2>HonorVet's departments</h2>
+      <p>Five core departments make up the organization:</p>
+      <table>
+        <tr><th>Department</th><th>Role</th></tr>
+        <tr><td>HR &amp; Admin</td><td>Internal people operations and administration</td></tr>
+        <tr><td>IT</td><td>Internal systems and technology</td></tr>
+        <tr><td>Business Development &amp; Marketing</td><td>Wins new client accounts and grows the brand</td></tr>
+        <tr><td>Training &amp; QA</td><td>Builds recruiter training and reviews quality — this is the team that built this module</td></tr>
+        <tr><td>SLED</td><td>State, Local &amp; Education Department — dedicated to that client vertical</td></tr>
+      </table>
+
+      <h2>How a placement moves through the org</h2>
+      <p>Recruitment itself is split into five verticals: <b>IT, Non-IT, Pharmaceuticals, Healthcare,</b> and <b>SLED</b>. Once a candidate is placed, they move into the hands of the <b>Onboarding, Timesheet,</b> and <b>Employee Care</b> teams, while the client relationship is owned by an <b>Account Manager / Client Relations Manager</b>.</p>
+
+      <div class="card">
+        <h4 class="mini-title" style="color:var(--gray);">Delivery team hierarchy</h4>
+        <div class="flow">
+          <div class="flow-step">Directors</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Associate Directors</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Delivery Managers</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Recruitment Managers</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Team Lead</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Senior / Lead Recruiters</div><span class="flow-arrow">→</span>
+          <div class="flow-step">Recruiters</div>
+        </div>
+      </div>
+
+      <p>On the finance side, the <b>Accounts Department</b> splits into Indian Accounts and US Accounts, and covers the <b>Payroll team</b>, <b>AR (Accounts Receivable)</b> team, and <b>AP (Accounts Payable)</b> team — payroll is processed through ADP, and pay cycles run weekly or bi-weekly depending on the account.</p>
+
+      <h2>How HonorVet wins business: RFI, RFP &amp; RFQ</h2>
+      <p>Before a contract is signed, it usually passes through one or more of these stages:</p>
+      <table>
+        <tr><th>Term</th><th>Stands for</th><th>What it means</th></tr>
+        <tr><td>RFI</td><td>Request for Information</td><td>A client explores potential vendors and their capabilities before committing to a formal bid</td></tr>
+        <tr><td>RFP</td><td>Request for Proposal</td><td>A formal request asking vendors to propose a solution and pricing</td></tr>
+        <tr><td>RFQ</td><td>Request for Quotation</td><td>A client requests a price quote against a well-defined, already-scoped requirement</td></tr>
+      </table>
+      <p style="font-size:13.5px; color:var(--gray);">A <b>proposal writer</b> puts together HonorVet's response, with <b>pricing</b> built in. A contract can end up as a <b>single award</b> (one vendor wins the whole contract) or a <b>multi award</b> (several vendors are selected to service it).</p>
+
+      <div class="callout gold">
+        Winning the work and staffing it is only step one. What gets negotiated next is the number that decides whether the placement is actually worth doing — the money. That's Chapter 5.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('ch3')">← Back</button>
+      <button class="pbtn" onclick="goTo('ch5')">Continue to Chapter 5 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 5: MONEY -->
+  <section class="page" id="page-ch5">
+    <div class="eyebrow">Chapter 5</div>
+    <h1 class="page-title">Pay Rate, Bill Rate, Markup &amp; Tax Terms</h1>
+    <p class="lede">Winning the account and staffing the req is only half the job. Next comes the number that decides whether it's actually worth doing: what the client pays HonorVet, and what HonorVet pays the candidate. This is the chapter you'll use most — getting bill rate, pay rate, and worker classification right is the difference between a compliant, profitable placement and a costly mistake.</p>
+
+    <div class="content-block">
+      <h2>Bill rate vs. pay rate</h2>
+      <table>
+        <tr><th>Term</th><th>Definition</th></tr>
+        <tr><td><b>Bill rate</b></td><td>The rate the <b>client pays to HonorVet</b> for the candidate's services</td></tr>
+        <tr><td><b>Pay rate</b></td><td>The rate <b>HonorVet pays the candidate</b></td></tr>
+        <tr><td><b>Net bill rate</b></td><td>The bill rate after the MSP fee and other fixed deductions are factored in</td></tr>
+        <tr><td><b>Loaded cost</b></td><td>The candidate's actual cost to HonorVet — pay rate plus the 25% overhead on top of it</td></tr>
+        <tr><td><b>Gross margin</b></td><td>What HonorVet actually keeps: net bill rate minus loaded cost</td></tr>
+      </table>
+      <p style="font-size:13.5px; color:var(--gray);">That distinction between pay rate and loaded cost matters more than it looks. A candidate only cares about the pay rate they're offered. HonorVet has to think in loaded cost, because that 25% overhead — mainly the employer's share of payroll tax withholding, plus FICA and minor benefits/payroll costs — is real money going out the door on top of the paycheck, regardless of client or position.</p>
+
+      <p>Which formula you use next depends entirely on how the account is structured. HonorVet accounts run one of two ways, and they are genuinely different calculations — not the same rule in two outfits.</p>
+
+      <h2>Bill-rate-driven accounts: protecting a dollar margin</h2>
+      <p>Here, the client hands HonorVet a fixed bill rate, and the job is to negotiate a pay rate that still leaves real money on the table.</p>
+      <div class="formula-box">
+        <p><b>Loaded Cost</b> = Pay Rate + (25% × Pay Rate)</p>
+        <p><b>Net Bill Rate</b> = Bill Rate − MSP Fee</p>
+        <p><b>Gross Margin</b> = Net Bill Rate − Loaded Cost</p>
+      </div>
+      <p>Say the bill rate is <b>$110/hr</b> with a 5% MSP fee, so the net bill rate is <b>$104.50</b>. Here's how three different pay rate offers play out:</p>
+      <table>
+        <tr><th>Pay rate offered</th><th>Overhead (25%)</th><th>Loaded cost</th><th>Gross margin</th></tr>
+        <tr><td>$80</td><td>$20.00</td><td>$100.00</td><td>$4.50</td></tr>
+        <tr><td>$85</td><td>$21.25</td><td>$106.25</td><td class="neg">−$1.75 (a loss)</td></tr>
+        <tr><td>$75</td><td>$18.75</td><td>$93.75</td><td>$10.75</td></tr>
+      </table>
+      <p style="font-size:13.5px; color:var(--gray);">This is exactly why a recruiter who only looks at "bill rate minus pay rate" gets fooled — $110 minus $80 looks like $30 of room, but the real gross margin is only $4.50 once the MSP fee and overhead are actually accounted for. If a Team Lead sets a margin target (say, at least $10/hr), this is the math that tells you what you can actually offer a candidate.</p>
+
+      <h2>Markup-driven accounts: protecting a percentage</h2>
+      <p>Here, the client sets a fixed markup percentage instead of a bill rate, and HonorVet builds the bill rate up from the pay rate.</p>
+      <div class="formula-box">
+        <p><b>Bill Rate</b> = Pay Rate × (1 + Markup%)</p>
+        <p><b>Pay Rate</b> = Bill Rate ÷ (1 + Markup%)</p>
+      </div>
+      <p>If a candidate's pay rate is <b>$50/hr</b> and the markup is <b>40%</b>, the bill rate is $50 × 1.40 = <b>$70/hr</b>. That $20 difference is what covers HonorVet's overhead, taxes, benefits, and profit — all in one number this time, rather than broken out separately like the bill-rate-driven example above. It also works backward: given a bill rate and a target markup, that same formula tells you the most you can offer as a pay rate.</p>
+
+      <div class="callout">
+        <strong>HonorVet rule:</strong> on markup-driven accounts, we do not work below a <b>33% markup</b> — that's the floor in the Bill Rate = Pay Rate × (1 + Markup%) formula above. It doesn't apply the same way to bill-rate-driven accounts, which are governed by dollar-margin targets instead, as shown in the example above.
+      </div>
+
+      <h2>Tax terms: W-2, 1099, and C2C</h2>
+      <p>How a candidate is paid changes who withholds taxes, who provides benefits, and how much risk HonorVet carries. There are three main arrangements.</p>
+
+      <h3>W-2</h3>
+      <p>The staffing agency hires the worker as an employee. Federal income tax, state income tax, Medicare tax, and Social Security tax — four types in total — are withheld directly from the paycheck. The worker receives a W-2 form at year end, and benefits like health insurance, PTO, or retirement plans may be offered. This is generally the <b>lowest-risk</b> classification.</p>
+      <p style="font-size:13.5px; color:var(--gray);"><i>Example: a software developer placed by HonorVet receives biweekly paychecks with taxes already deducted.</i></p>
+
+      <h3>1099</h3>
+      <p>The worker operates as an independent contractor / sole proprietor. No payroll taxes are withheld, and benefits are generally not provided. In our world, this arrangement most often applies to <b>physicians</b>.</p>
+
+      <h3>C2C — Corp-to-Corp</h3>
+      <p>The contractor works through their own business entity, usually an LLC or corporation. HonorVet contracts with that business, not the individual — the contractor's company invoices HonorVet and is responsible for its own payroll, taxes, insurance, and compliance. It offers more flexibility but comes with more administrative overhead.</p>
+      <p style="font-size:13.5px; color:var(--gray);"><i>Example: Jane owns an LLC. HonorVet signs a contract with Jane's LLC, and the LLC invoices HonorVet for Jane's services.</i></p>
+
+      <div class="callout gold">
+        <strong>Minimum wage</strong> varies by state and role — always confirm the current applicable rate before quoting a pay rate to a candidate rather than relying on memory.
+      </div>
+
+      <div class="activity-box">
+        <span class="activity-label">Activity</span>
+        <h3 style="margin-top:0;">Which arrangement is it?</h3>
+        <p style="font-size:14px;">Read each scenario and pick W-2, 1099, or C2C.</p>
+        <div id="scenario-list"></div>
+      </div>
+
+      <div class="callout gold">
+        None of this matters if the candidate can't legally start the job. That's the last hurdle, and it's where a rushed placement falls apart fastest: compliance.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('ch4')">← Back</button>
+      <button class="pbtn" onclick="goTo('ch6')">Continue to Chapter 6 →</button>
+    </div>
+  </section>
+
+  <!-- CHAPTER 6: COMPLIANCE -->
+  <section class="page" id="page-ch6">
+    <div class="eyebrow">Chapter 6</div>
+    <h1 class="page-title">Compliance, Immunization Records &amp; Background Verification</h1>
+    <p class="lede">You've settled the rate. Before any of it becomes real, the candidate still has to clear compliance — this is where a placement can fall apart fastest if it's rushed, so treat it as seriously as sourcing.</p>
+
+    <div class="content-block">
+      <h2>Work authorization compliance</h2>
+      <p>I-9 verification — confirming identity and eligibility to work in the U.S. — is mandatory for every new hire, citizen and noncitizen alike. It has three sections: the <b>employee</b> completes Section 1, and the <b>employer</b> completes Section 2 and, when applicable, Section 3 (for reverification or rehire). Employers can be fined for a form that isn't completed properly, and a candidate can be prosecuted for knowingly entering false information — so this isn't a box-ticking step. HonorVet is also responsible for retaining every completed I-9 on file.</p>
+      <p style="font-size:13.5px; color:var(--gray);">Commonly accepted documents: a U.S. passport on its own; or, without a passport, a Green Card (Permanent Resident Card with photo); or a driver's license / state-issued photo ID paired with a Social Security card if neither of the above is available.</p>
+      <div class="callout danger">
+        <strong>Non-IT clients accept only USC (U.S. Citizen) or GC (Green Card) work authorization.</strong> GC-EAD — a pending Green Card work permit — is <u>not</u> valid for any Non-IT client. Always verify work authorization type before submitting a Non-IT candidate.
+      </div>
+
+      <h2>W-4</h2>
+      <p>Form W-4 is the IRS form a new hire fills out to tell HonorVet how much tax to withhold from their paycheck, based on marital status, dependents, and other factors. It's paperwork every W-2 placement completes alongside the I-9.</p>
+
+      <h2>Immunization &amp; health records (healthcare placements)</h2>
+      <p>Most healthcare facilities require proof of the following before a candidate can start on assignment:</p>
+      <table>
+        <tr><th>Requirement</th><th>What's typically needed</th><th>Validity</th></tr>
+        <tr><td>MMR</td><td>Proof of immunity or a titer for Measles, Mumps, and Rubella</td><td>—</td></tr>
+        <tr><td>Varicella</td><td>Proof of immunity or a titer for chickenpox</td><td>—</td></tr>
+        <tr><td>Hepatitis B</td><td>Completed vaccination series, or a signed declination</td><td>—</td></tr>
+        <tr><td>Tdap</td><td>Documented booster</td><td>Within the last 10 years</td></tr>
+        <tr><td>TB screening</td><td>PPD skin test or TB blood test (QuantiFERON); chest X-ray follow-up if positive</td><td>Within 60 days for a new client. If it's the same client the candidate worked for before, they can accept the existing report even if it's older.</td></tr>
+        <tr><td>Physical exam</td><td>Annual body checkup covering vitals and medical history</td><td>1 year</td></tr>
+        <tr><td>N95 mask fit test</td><td>Required for clinical roles</td><td>1 year</td></tr>
+        <tr><td>Influenza vaccine</td><td>Taken at the start of each flu season</td><td>Most clients cover October–April; roughly two-thirds extend it through June</td></tr>
+      </table>
+      <p style="font-size:13.5px; color:var(--gray);">The exact list and validity windows vary by facility — always confirm against that facility's compliance packet rather than assuming a standard set applies everywhere.</p>
+
+      <h2>Background verification (BGV)</h2>
+      <p>A standard BGV package generally includes:</p>
+      <ul style="font-size:15.5px; color:#332f2e; padding-left:22px;">
+        <li>Criminal background check — typically county, state, and federal level, using an SSN trace to identify prior addresses, and often fingerprint-based rather than just name-based</li>
+        <li>Employment verification — confirming past employers, dates, and roles</li>
+        <li>Education, license, and certification verification — degree confirmation, state board license verification for nurses, and relevant professional certifications (for example, BLS/ACLS in healthcare)</li>
+        <li>OIG and SAM.gov exclusion checks — confirming the candidate isn't excluded from federal healthcare programs or federal contracting, which matters most for our government clients</li>
+        <li>Sex offender registry check</li>
+        <li>Professional reference checks</li>
+        <li>Drug screening (the "DT" in "BGC" — background check and drug test)</li>
+      </ul>
+
+      <h3>Reading a criminal record: felony vs. misdemeanor</h3>
+      <p>A criminal background check can return charges at very different severity levels, and knowing the difference matters for reading a report correctly.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h4 class="mini-title">Felony</h4>
+          <p style="margin:0; font-size:14px;">A serious crime, generally punishable by more than a year in prison — things like murder, robbery, or serious drug trafficking.</p>
+        </div>
+        <div class="card">
+          <h4 class="mini-title">Misdemeanor</h4>
+          <p style="margin:0; font-size:14px;">A less serious offense, generally punishable by a fine or up to a year in jail. Many states grade misdemeanors by severity, from most to least serious — the exact grading system varies by state.</p>
+        </div>
+      </div>
+      <table>
+        <tr><th>Class</th><th>Typical examples</th></tr>
+        <tr><td>Class A</td><td>Assault causing injury, fraudulent use of someone's credit card or ID info, allowing a child around drugs, shoplifting, vandalism, resisting arrest</td></tr>
+        <tr><td>Class B</td><td>First-offense DWI, indecent exposure, failure to pay child support, minor drug possession (up to 2 oz), harassment, filing a false police report, criminal trespass or mischief (breaking and entering)</td></tr>
+        <tr><td>Class C</td><td>Traffic tickets, public intoxication, simple assault, criminal trespassing, gambling, bail jumping, leaving a child in a vehicle, possessing alcohol in a vehicle, minor DUI</td></tr>
+      </table>
+      <p style="font-size:13.5px; color:var(--gray);">A charge only counts as a conviction once it's been <b>adjudicated</b> — the same term from drug testing applies here too, meaning the court has reached a final decision. A pending, unadjudicated charge reads differently on a report than a conviction does.</p>
+
+      <h3>Drug testing (DT), panel by panel</h3>
+      <p>A drug test is a lab analysis of a urine specimen to detect the presence or absence of specific drugs. Which panel a role needs depends entirely on the client and the position:</p>
+      <table>
+        <tr><th>Panel</th><th>Screens for</th></tr>
+        <tr><td>5-panel</td><td>Marijuana, opiates, PCP, cocaine, amphetamines</td></tr>
+        <tr><td>7-panel</td><td>The 5-panel list, plus benzodiazepines and barbiturates</td></tr>
+        <tr><td>10-panel</td><td>Cocaine, marijuana, PCP, amphetamines, opiates, benzodiazepines, barbiturates, methadone, propoxyphene, and Quaaludes</td></tr>
+        <tr><td>12-panel</td><td>Extends the 10-panel with additional prescription painkillers and other controlled substances of concern for the workplace</td></tr>
+      </table>
+      <p>Most client requests land on a 10- or 12-panel test. Results generally take <b>24–72 hours</b>, sometimes longer depending on the substance.</p>
+
+      <div class="callout gold">
+        <strong>Any positive result is a red flag by default.</strong> If a candidate expects a positive result because of a legitimately prescribed medication, they need to disclose that <i>before</i> the test and provide a copy of their most recent prescription from their doctor. A Medical Review Officer (MRO) reviews prescription claims tied to a positive result as part of <b>adjudication</b> — the formal process of deciding how a flagged result gets resolved.
+      </div>
+
+      <p style="font-size:13.5px; color:var(--gray);">HonorVet works with several drug-test and background-check vendors depending on the client: LabCorp typically handles collection, while Exact, Sterling, Orsus, ScoutLogic, and First Advantage serve as client portals where a submission shows as "completed" once the candidate has initiated the test — NY Best is used only for drug testing and medicals. Collection site hours vary by location (some accept walk-ins only within a narrow window, so always confirm the specific site's hours before sending a candidate).</p>
+
+      <p style="font-size:13.5px; color:var(--gray);">A note on marijuana specifically: as of 2026 it's legal for recreational use in 24 states plus D.C., and for medical use in around 40 states — but it remains a Schedule I controlled substance under federal law. That federal status is generally what governs client drug policies, so a positive marijuana result can still count as positive even in a state where its use is legal, unless the specific client says otherwise.</p>
+
+      <div class="callout gold">
+        None of these steps begin until an offer is extended and the candidate has given consent. Always follow HonorVet's specific compliance packet for the role rather than assuming this general list is complete.
+      </div>
+
+      <div class="callout gold" style="margin-top:36px;">
+        Up next in your training: GSA schedules and how bill-rate markup segregations work in practice — covered in the next module.
+      </div>
+
+      <div class="callout" style="margin-top:20px;">
+        Step back and that's the full arc of one requisition: HonorVet wins the work, staffs it through the right team, negotiates the rate, and clears the candidate to actually start. Every chapter you just read is one link in that same chain. The quiz next checks all of it.
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <button class="pbtn secondary" onclick="goTo('ch5')">← Back</button>
+      <button class="pbtn" onclick="goTo('quiz')">Go to Final Quiz →</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="page" id="page-quiz">
+    <div class="eyebrow">Final Assessment</div>
+    <h1 class="page-title">KYC Knowledge Check</h1>
+    <p class="lede">39 questions across the module. Score 70% or higher (28/39) to unlock your certificate. You can retake this as many times as you need.</p>
+
+    <div id="quiz-container"></div>
+
+    <div id="quiz-result">
+      <div class="score-num" id="score-display">0%</div>
+      <p id="score-msg" style="font-size:15px;"></p>
+      <div class="badge-row" id="badge-row"></div>
+      <button class="pbtn" id="cert-cta" style="margin-top:18px; display:none;" onclick="goTo('cert')">Claim your certificate →</button>
+      <button class="pbtn secondary" style="margin-top:18px;" onclick="retakeQuiz()">Retake quiz</button>
+    </div>
+
+    <div class="page-nav no-print">
+      <button class="pbtn secondary" onclick="goTo('ch6')">← Back</button>
+      <button class="pbtn" id="submit-quiz-btn" onclick="submitQuiz()">Submit answers</button>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE -->
+  <section class="page" id="page-cert">
+    <div class="eyebrow">Final Step</div>
+    <h1 class="page-title">Your Certificate</h1>
+
+    <div id="cert-gate">
+      <p class="lede">Pass the final quiz with a score of 70% or higher to unlock your certificate.</p>
+      <button class="pbtn" onclick="goTo('quiz')">Go take the quiz →</button>
+    </div>
+
+    <div id="cert-wrap">
+      <div class="content-block" style="max-width:500px;">
+        <p style="font-size:14px; color:var(--gray);">Enter your full name as you'd like it to appear on the certificate:</p>
+        <input type="text" class="name-input" id="cert-name-input" placeholder="Your full name" oninput="updateCertName()">
+      </div>
+
+      <div class="cert" id="cert">
+        <div class="cert-topstrip"></div>
+        <div class="cert-inner">
+          <img class="cert-logo" src="data:image/png;base64,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1qS/Egn8STgEQQxx+7fMaw72/u7w/wCkTvIP7pPH5dK7C38CyuQbq7RB3WNd36nFbVl4T0izIY2/nuP4pju/Tp+lethskrvVxUfUX9oYHD6wV35f5s8ystE1HVX22dq7rnBfGFH4niuy0f4d20BWbVJftDjnyUyEH1PU/pXbKqooVVCqOAAMAUte/h8rpUtZe8/w+44MTnmIqrlp+6vLf7/8hkMMVvEsUMaxxqMKiDAH4U+iivTPGbbd2FFFFAgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP/Z" alt="HonorVet Technologies">
+          <div class="cert-sdvosb">Service-Disabled Veteran Owned Small Business</div>
+          <div class="cert-heading">Certificate of Completion</div>
+          <div class="cert-presented">This certifies that</div>
+          <div class="cert-name" id="cert-name-display">Recipient Name</div>
+          <div class="cert-desc">has successfully completed <b>KYC — Know Your Company</b>, covering recruitment &amp; staffing fundamentals, HonorVet's client base and internal team, pay rate / bill rate / tax classification, and compliance &amp; background verification.</div>
+          <div class="cert-pills">
+            <div class="cert-pill" id="cert-score-pill">Score: —</div>
+            <div class="cert-pill" id="cert-badge-pill">KYC Certified</div>
+          </div>
+          <div class="cert-sign-row">
+            <div class="cert-date" id="cert-date">Date: —</div>
+            <div class="cert-sig">
+              <div class="sname">Rachana Narang</div>
+              <div class="stitle">Authorised — HonorVet Technologies</div>
+              <div class="surl">honorvettech.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-nav no-print" style="justify-content:center; border-top:none;">
+        <button class="pbtn" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- State ---------------- */
+const state = {
+  visited: {welcome:true, ch1:false, ch2:false, ch3:false, ch4:false, ch5:false, ch6:false, quiz:false, cert:false},
+  quizPassed:false,
+  score:0,
+};
+const pages = ['welcome','ch1','ch2','ch3','ch4','ch5','ch6','quiz','cert'];
+
+function goTo(id){
+  pages.forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('active', p===id);
+    document.querySelector('.nav-item[data-page="'+p+'"]').classList.toggle('active', p===id);
+  });
+  state.visited[id] = true;
+  document.querySelector('.nav-item[data-page="'+id+'"]').classList.add('done');
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.nav-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>goTo(btn.dataset.page));
+});
+
+function updateProgress(){
+  const done = Object.values(state.visited).filter(Boolean).length;
+  const pct = Math.round((done/9)*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-label').textContent = done+' of 9 sections complete';
+}
+updateProgress();
+
+/* ---------------- Chapter 1: Lines of Service flip cards ---------------- */
+const losData = [
+  {tag:'Temporary Staffing', name:'Contingent Staff Augmentation', def:'Providing qualified temporary or contract professionals to supplement a client\'s workforce for a specific period, project, or skill requirement.'},
+  {tag:'Direct Hire', name:'Permanent Staffing', def:'Recruiting and placing full-time employees who join the client\'s payroll on a long-term basis.'},
+  {tag:'Back Office', name:'Payroll Services', def:'Salary processing, tax management, compliance, payslip generation, and statutory filings for candidates.'},
+  {tag:'Delivery', name:'Project Services', def:'End-to-end support to plan, execute, manage, and deliver a specific business or technology project.'},
+  {tag:'Conversion Path', name:'CTH — Contract to Hire', def:'The employee starts on a temporary contract, with the possibility of converting to permanent after a defined evaluation period.'},
+  {tag:'Fixed Term', name:'Contract', def:'An engagement for a specific, agreed-upon duration.'},
+];
+const losGrid = document.getElementById('los-cards');
+losData.forEach((d,i)=>{
+  const card = document.createElement('div');
+  card.className='flip-card';
+  card.innerHTML = `<div class="flip-inner">
+    <div class="flip-front"><div class="ftag">${d.tag}</div><div class="fname">${d.name}</div><div class="fhint">Click to reveal definition</div></div>
+    <div class="flip-back"><p>${d.def}</p></div>
+  </div>`;
+  card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+  losGrid.appendChild(card);
+});
+
+/* ---------------- Chapter 1: Sequence activity ---------------- */
+const seqCorrect = ['Requirement','Job Description','Sourcing','Screening','Interview','Selection','Offer','Onboarding'];
+let seqProgress = 0;
+function buildSeqPool(){
+  const pool = document.getElementById('seq-pool');
+  pool.innerHTML='';
+  const shuffled = [...seqCorrect].sort(()=>Math.random()-0.5);
+  shuffled.forEach(step=>{
+    const chip = document.createElement('button');
+    chip.className='seq-chip';
+    chip.textContent = step;
+    chip.addEventListener('click', ()=>clickSeq(chip, step));
+    pool.appendChild(chip);
+  });
+}
+function clickSeq(chip, step){
+  if(step === seqCorrect[seqProgress]){
+    chip.classList.add('correct');
+    const built = document.getElementById('seq-built');
+    const b = document.createElement('span');
+    b.className='b';
+    b.textContent = (seqProgress+1)+'. '+step;
+    built.appendChild(b);
+    seqProgress++;
+    if(seqProgress === seqCorrect.length){
+      document.getElementById('seq-msg').textContent = 'Nailed it — that\'s the full recruitment life cycle.';
+      document.getElementById('seq-msg').classList.add('win');
+    }
+  } else {
+    chip.classList.add('wrong');
+    setTimeout(()=>chip.classList.remove('wrong'), 300);
+  }
+}
+function resetSeq(){
+  seqProgress = 0;
+  document.getElementById('seq-built').innerHTML='';
+  document.getElementById('seq-msg').textContent='';
+  document.getElementById('seq-msg').classList.remove('win');
+  buildSeqPool();
+}
+buildSeqPool();
+
+/* ---------------- Chapter 2: Client type flip cards ---------------- */
+const clientData = [
+  {tag:'Federal Government', name:'Federal Clients', def:'Agencies like the Department of Defense, Department of Homeland Security, NASA, and the IRS. Contracts follow Federal Acquisition Regulations (FAR), carry large contract values, and come with extensive compliance and security requirements.'},
+  {tag:'State Government', name:'State Clients', def:'Agencies run by individual states — e.g. California DOT, Texas DOT, state universities. Procurement rules vary by state, with a focus on regional services and infrastructure.'},
+  {tag:'Local Government', name:'Local Clients', def:'City and county governments, school districts, and public utilities — e.g. City of New York, Los Angeles County. Smaller budgets than federal, with local procurement processes.'},
+  {tag:'Commercial', name:'Commercial Clients', def:'Private-sector businesses of any size — startups, SMBs, large enterprises like Microsoft, Amazon, Walmart. Faster purchasing decisions, profit-driven, and more flexible contracts than government work.'},
+];
+const clientGrid = document.getElementById('client-cards');
+clientData.forEach(d=>{
+  const card = document.createElement('div');
+  card.className='flip-card';
+  card.innerHTML = `<div class="flip-inner">
+    <div class="flip-front"><div class="ftag">${d.tag}</div><div class="fname">${d.name}</div><div class="fhint">Click to reveal details</div></div>
+    <div class="flip-back"><p>${d.def}</p></div>
+  </div>`;
+  card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+  clientGrid.appendChild(card);
+});
+
+/* ---------------- Chapter 2: Fortune 500 classify activity ---------------- */
+const classifyData = [
+  {name:'Walmart', f500:true},
+  {name:'Amazon', f500:true},
+  {name:'JPMorgan Chase', f500:true},
+  {name:'A 20-person local marketing agency', f500:false},
+  {name:'Microsoft', f500:true},
+  {name:'A family-owned regional grocery chain', f500:false},
+];
+const classifyRow = document.getElementById('classify-row');
+classifyData.forEach(d=>{
+  const chip = document.createElement('div');
+  chip.className='classify-chip';
+  chip.innerHTML = `<div>${d.name}</div>
+    <div class="btns">
+      <button onclick="answerClassify(this,${d.f500},true)">Fortune 500</button>
+      <button onclick="answerClassify(this,${d.f500},false)">Not Fortune 500</button>
+    </div>
+    <div class="classify-result"></div>`;
+  classifyRow.appendChild(chip);
+});
+function answerClassify(btn, actual, guess){
+  const chip = btn.closest('.classify-chip');
+  if(chip.classList.contains('answered')) return;
+  chip.classList.add('answered', guess===actual ? 'right' : 'wrong');
+  chip.querySelector('.classify-result').textContent = guess===actual ? 'Correct.' : ('Not quite — this one is '+(actual? 'Fortune 500.':'not Fortune 500.'));
+}
+
+/* ---------------- Chapter 3: fee reveal ---------------- */
+const feeData = [
+  {label:'IT', val:'1–5%'},
+  {label:'Healthcare', val:'1–10%'},
+  {label:'Non-IT', val:'1–5%'},
+];
+const feeRow = document.getElementById('fee-row');
+feeData.forEach(d=>{
+  const card = document.createElement('div');
+  card.className='fee-card';
+  card.innerHTML = `<div class="flabel">${d.label}</div><div class="fval">${d.val}</div>`;
+  card.addEventListener('click', ()=>card.classList.add('revealed'));
+  feeRow.appendChild(card);
+});
+
+/* ---------------- Chapter 3: acronym cards ---------------- */
+const acroData = [
+  {tag:'?', name:'MSP', def:'Managed Service Provider — manages a client\'s contingent workforce program on their behalf.'},
+  {tag:'?', name:'VMS', def:'Vendor Management System — the platform used to manage requisitions and submittals across vendors.'},
+  {tag:'?', name:'MSA', def:'Master Service Agreement — the overarching contract setting terms of engagement.'},
+  {tag:'?', name:'ATS', def:'Applicant Tracking System — HonorVet uses JobDiva as its system of record.'},
+  {tag:'?', name:'OT', def:'Overtime — hours worked beyond 40/week, typically paid at 1.5x.'},
+  {tag:'?', name:'CTH', def:'Contract to Hire — temporary contract with a possible conversion to permanent.'},
+];
+const acroGrid = document.getElementById('acro-cards');
+acroData.forEach(d=>{
+  const card = document.createElement('div');
+  card.className='flip-card';
+  card.innerHTML = `<div class="flip-inner">
+    <div class="flip-front"><div class="ftag">Acronym</div><div class="fname">${d.name}</div><div class="fhint">Click to reveal</div></div>
+    <div class="flip-back"><p>${d.def}</p></div>
+  </div>`;
+  card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+  acroGrid.appendChild(card);
+});
+
+/* ---------------- Chapter 4: scenario activity ---------------- */
+const scenarioData = [
+  {text:'A software developer is placed by HonorVet and receives biweekly paychecks with federal, state, Medicare, and Social Security taxes already deducted.', answer:'W-2'},
+  {text:'A physician works independently, invoices for services rendered, and receives no payroll tax withholding or benefits from HonorVet.', answer:'1099'},
+  {text:'Jane owns an LLC. HonorVet signs a contract with Jane\'s LLC, and the LLC invoices HonorVet directly for Jane\'s work — Jane\'s company handles its own payroll and taxes.', answer:'C2C'},
+];
+const scenarioList = document.getElementById('scenario-list');
+scenarioData.forEach((d,i)=>{
+  const card = document.createElement('div');
+  card.className='scenario-card';
+  card.innerHTML = `<div class="stxt">"${d.text}"</div>
+    <div class="scenario-btns">
+      <button onclick="answerScenario(this,'${d.answer}','W-2')">W-2</button>
+      <button onclick="answerScenario(this,'${d.answer}','1099')">1099</button>
+      <button onclick="answerScenario(this,'${d.answer}','C2C')">C2C</button>
+    </div>
+    <div class="scenario-feedback"></div>`;
+  scenarioList.appendChild(card);
+});
+function answerScenario(btn, correct, guess){
+  const card = btn.closest('.scenario-card');
+  const fb = card.querySelector('.scenario-feedback');
+  card.querySelectorAll('.scenario-btns button').forEach(b=>b.disabled=true);
+  if(guess===correct){
+    fb.textContent = 'Correct — this is a '+correct+' arrangement.';
+    fb.className='scenario-feedback right';
+  } else {
+    fb.textContent = 'Not quite — this is actually '+correct+'.';
+    fb.className='scenario-feedback wrong';
+  }
+  fb.style.display='block';
+}
+
+/* ---------------- Quiz ---------------- */
+const quizData = [
+  {q:'What does recruitment primarily focus on?', opts:['Finding and hiring talent','Managing the workforce long-term','Processing payroll','Negotiating markup'], correct:0},
+  {q:'What does staffing focus on, beyond recruitment?', opts:['Only sourcing candidates','Maintaining and managing the workforce over time','Filing state taxes','Setting client budgets'], correct:1},
+  {q:'In the recruitment life cycle, what comes right after "Sourcing"?', opts:['Onboarding','Offer','Screening','Selection'], correct:2},
+  {q:"HonorVet Technologies' legal registered name is:", opts:['HonorVet LLC','Veteran Staffing Corp','Technostaff LLC (dba HonorVet Technologies)','HVT Global Inc'], correct:2},
+  {q:'HonorVet is certified as a(n):', opts:['SDVOSB','MBE only','8(a) only','Publicly traded company'], correct:0},
+  {q:'Which line of service supplies temporary professionals to fill a short-term need?', opts:['Permanent Staffing','Contingent Staff Augmentation','Payroll Services','Project Services'], correct:1},
+  {q:'CTH stands for:', opts:['Contract to Hire','Client Transition Handbook','Credentialed Talent Hire','Corporate Talent Hub'], correct:0},
+  {q:'Which client type must follow Federal Acquisition Regulations (FAR)?', opts:['Commercial','Local Government','Federal Government','State Government'], correct:2},
+  {q:'Which of these is an example of a Commercial client discussed in training?', opts:['Department of Defense','City of New York','Microsoft','Texas DOT'], correct:2},
+  {q:'Fortune 500 companies are ranked annually by:', opts:['Employee headcount','Revenue','Stock price','Years in business'], correct:1},
+  {q:'What does MSP stand for?', opts:['Managed Service Provider','Master Staffing Partner','Multi-State Placement','Market Service Percentage'], correct:0},
+  {q:'Typical MSP fees in Healthcare run roughly:', opts:['0.5–1%','1–10%','15–20%','25–30%'], correct:1},
+  {q:'What does VMS stand for?', opts:['Vendor Management System','Verified Match Service','Virtual Meeting Software','Vetting Management Scale'], correct:0},
+  {q:"HonorVet's ATS (system of record) is:", opts:['Salesforce','Workday','JobDiva','Bullhorn'], correct:2},
+  {q:'In the U.S., overtime generally applies once a full-time employee works more than how many hours in a week?', opts:['35','38','40','45'], correct:2},
+  {q:'The standard overtime pay multiplier is:', opts:['1.25x','1.5x','2x','1x'], correct:1},
+  {q:'Bill rate is:', opts:['The rate HonorVet pays the candidate','The rate the client pays HonorVet','The candidate\'s desired salary','The MSP\'s admin fee'], correct:1},
+  {q:"On a markup-driven account, HonorVet's rule is we never go below a markup of:", opts:['15%','20%','25%','33%'], correct:3},
+  {q:'Loaded cost is calculated as:', opts:['Bill rate minus MSP fee','Pay rate plus 25% overhead','Bill rate divided by markup','Net bill rate minus gross margin'], correct:1},
+  {q:'On a bill-rate-driven account, gross margin is calculated as:', opts:['Bill rate minus pay rate','Net bill rate minus loaded cost','Pay rate times markup','Loaded cost minus overhead'], correct:1},
+  {q:'The 33% minimum markup rule applies to:', opts:['Every account, calculated on loaded cost','Bill-rate-driven accounts only','Markup-driven accounts specifically', 'Only accounts under $50/hr'], correct:2},
+  {q:'Under a W-2 arrangement, how many types of taxes are typically withheld?', opts:['2','3','4','5'], correct:2},
+  {q:'C2C (Corp-to-Corp) means:', opts:['The candidate is a full HonorVet employee','The contractor is paid through their own LLC/corporation, which HonorVet contracts with','The candidate is paid in cash with no invoice','The client pays the candidate directly'], correct:1},
+  {q:'For Non-IT clients, which work authorization is valid?', opts:['GC-EAD only','Any pending work permit','USC or GC only','H-1B only'], correct:2},
+  {q:'A varicella titer is used to check proof of immunity to:', opts:['Influenza','Chickenpox','Tuberculosis','Hepatitis B'], correct:1},
+  {q:'OIG and SAM.gov exclusion checks are part of which process?', opts:['Payroll setup','Background verification (BGV)','Markup negotiation','Job Description creation'], correct:1},
+  {q:'An RFP is:', opts:['A request for a price quote on a defined requirement','A formal request asking vendors to propose a solution and pricing','A signed employment contract','An internal HR policy document'], correct:1},
+  {q:'Which department owns building recruiter training?', opts:['Accounts Department','Business Development & Marketing','Training & QA','HR & Admin'], correct:2},
+  {q:'In the delivery team hierarchy, who typically sits above a Recruitment Manager?', opts:['Recruiter','Team Lead','Delivery Manager','Senior Recruiter'], correct:2},
+  {q:'JCC, one of HonorVet\'s certifications, stands for:', opts:['Joint Commission Certified','Job Candidate Clearance','Junior Compliance Check','Joint Client Committee'], correct:0},
+  {q:'On Form I-9, who completes Section 1?', opts:['HonorVet as the employer','The client company','The employee','The MRO'], correct:2},
+  {q:'Form W-4 is used to determine:', opts:['The candidate\'s bill rate','How much tax to withhold from a paycheck','Work authorization type','The MSP fee'], correct:1},
+  {q:'If a candidate expects a positive drug test due to a prescribed medication, they should:', opts:['Say nothing and wait for the result','Disclose it before the test and provide a copy of the prescription','Ask HonorVet to skip the test','Retake the test at a different lab'], correct:1},
+  {q:'Under federal law, marijuana is currently classified as:', opts:['Fully legal nationwide','A Schedule I controlled substance','An over-the-counter (OTC) substance','Legal only for staffing candidates'], correct:1},
+  {q:'For a new client, a TB QuantiFERON report generally needs to be within:', opts:['30 days','60 days','6 months','1 year'], correct:1},
+  {q:'A physical exam and an N95 mask fit test are each typically valid for:', opts:['30 days','90 days','1 year','2 years'], correct:2},
+  {q:'A felony is generally distinguished from a misdemeanor by being punishable by:', opts:['A warning only', 'A fine under $50', 'More than a year in prison', 'Community service only'], correct:2},
+  {q:'In a background check, a charge only counts as a conviction once it has been:', opts:['Reported', 'Adjudicated', 'Fingerprinted', 'Filed'], correct:1},
+  {q:'Fingerprint-based background checks (through state and FBI databases) are especially common for:', opts:['Retail roles only', 'Healthcare and government-facing roles', 'Remote-only positions', 'Internal HonorVet hires only'], correct:1},
+];
+const quizContainer = document.getElementById('quiz-container');
+const userAnswers = new Array(quizData.length).fill(null);
+function renderQuiz(){
+  quizContainer.innerHTML='';
+  quizData.forEach((q,qi)=>{
+    const box = document.createElement('div');
+    box.className='quiz-q';
+    box.innerHTML = `<div class="qnum">Question ${qi+1} of ${quizData.length}</div><div class="qtext">${q.q}</div>`;
+    q.opts.forEach((opt,oi)=>{
+      const b = document.createElement('button');
+      b.className='qopt';
+      b.textContent = opt;
+      b.addEventListener('click', ()=>selectAnswer(qi, oi, box));
+      box.appendChild(b);
+    });
+    quizContainer.appendChild(box);
+  });
+}
+function selectAnswer(qi, oi, box){
+  userAnswers[qi]=oi;
+  box.querySelectorAll('.qopt').forEach((b,i)=>b.classList.toggle('selected', i===oi));
+}
+renderQuiz();
+
+function submitQuiz(){
+  const unanswered = userAnswers.findIndex(a=>a===null);
+  if(unanswered !== -1){
+    alert('Please answer all questions before submitting — question '+(unanswered+1)+' is still blank.');
+    return;
+  }
+  let correctCount = 0;
+  document.querySelectorAll('.quiz-q').forEach((box,qi)=>{
+    const opts = box.querySelectorAll('.qopt');
+    opts.forEach(o=>o.disabled=true);
+    const correctIdx = quizData[qi].correct;
+    opts[correctIdx].classList.add('correct');
+    if(userAnswers[qi] !== correctIdx){
+      opts[userAnswers[qi]].classList.add('incorrect');
+    } else {
+      correctCount++;
+    }
+  });
+  const pct = Math.round((correctCount/quizData.length)*100);
+  state.score = pct;
+  state.quizPassed = pct >= 70;
+  document.getElementById('quiz-result').style.display='block';
+  document.getElementById('score-display').textContent = pct+'%';
+  document.getElementById('score-msg').textContent = correctCount+' of '+quizData.length+' correct. '+(state.quizPassed ? 'You\'ve passed — your certificate is ready.' : 'You need 70% to unlock the certificate — feel free to retake it.');
+  const badgeRow = document.getElementById('badge-row');
+  badgeRow.innerHTML='';
+  if(pct===100){badgeRow.innerHTML='<span class="badge">Perfect Score</span><span class="badge">KYC Graduate</span>';}
+  else if(state.quizPassed){badgeRow.innerHTML='<span class="badge">KYC Certified</span>';}
+  document.getElementById('cert-cta').style.display = state.quizPassed ? 'inline-block' : 'none';
+  document.getElementById('submit-quiz-btn').style.display='none';
+  visitAndCheckQuiz();
+  window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+}
+function visitAndCheckQuiz(){
+  state.visited.quiz = true;
+  document.querySelector('.nav-item[data-page="quiz"]').classList.add('done');
+  updateProgress();
+}
+function retakeQuiz(){
+  userAnswers.fill(null);
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('submit-quiz-btn').style.display='inline-block';
+  renderQuiz();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------------- Certificate ---------------- */
+function updateCertName(){
+  const val = document.getElementById('cert-name-input').value.trim();
+  document.getElementById('cert-name-display').textContent = val || 'Recipient Name';
+}
+const origGoTo = goTo;
+goTo = function(id){
+  origGoTo(id);
+  if(id==='cert'){
+    if(state.quizPassed){
+      document.getElementById('cert-gate').style.display='none';
+      document.getElementById('cert-wrap').style.display='block';
+      document.getElementById('cert-score-pill').textContent = 'Score: '+state.score+'%';
+      document.getElementById('cert-badge-pill').textContent = state.score===100 ? 'KYC Graduate' : 'KYC Certified';
+      const d = new Date();
+      document.getElementById('cert-date').textContent = 'Date: '+d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    } else {
+      document.getElementById('cert-gate').style.display='block';
+      document.getElementById('cert-wrap').style.display='none';
+    }
+  }
+};
+</script>
+</body>
+</html>
